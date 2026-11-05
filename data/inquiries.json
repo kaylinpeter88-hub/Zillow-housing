@@ -1,0 +1,54 @@
+[
+  {
+    "id": "inq_1793885700121_qe2ta",
+    "fullName": "Julian Thorne",
+    "email": "julian@example.com",
+    "phone": "(555) 432-1098",
+    "subject": "123 Maple Street Showing",
+    "message": "Hello Sarah, looking to schedule a tour for this Saturday.",
+    "propertyAddress": "123 Maple Street",
+    "recipientEmail": "kaylinpeter88@gmail.com",
+    "status": "delivered",
+    "createdAt": "2026-11-05T13:35:00.121Z",
+    "source": "contact_form"
+  },
+  {
+    "id": "inq_1793885151849_a0sod",
+    "fullName": "Eleanor Rigby",
+    "email": "eleanor@example.com",
+    "phone": "(555) 987-6543",
+    "subject": "Question about 123 Maple St",
+    "message": "Hello, testing Formspree integration for customer inquiries.",
+    "propertyAddress": "123 Maple Street",
+    "recipientEmail": "https://formspree.io/f/mwllzvgd",
+    "status": "delivered",
+    "createdAt": "2026-11-05T13:25:51.849Z",
+    "source": "contact_form"
+  },
+  {
+    "id": "inq_1793880410264_97zxz",
+    "fullName": "Alexander Wright",
+    "email": "alex.wright@example.com",
+    "phone": "(555) 789-0123",
+    "subject": "Inquiry regarding 123 Maple Street",
+    "message": "Hello Sarah, I would like to confirm if the open house will have inspection reports ready.",
+    "propertyAddress": "123 Maple Street",
+    "recipientEmail": "sarah.j@zillowagent.com",
+    "status": "delivered",
+    "createdAt": "2026-11-05T12:06:50.264Z",
+    "source": "contact_form"
+  },
+  {
+    "id": "inq_demo_01",
+    "fullName": "David & Emily Miller",
+    "email": "d.miller@gmail.com",
+    "phone": "(555) 234-8901",
+    "subject": "Question regarding EV Charger & Inspection Report",
+    "message": "Hello Sarah, we love the photos of 123 Maple Street! We drive an EV and wanted to confirm the garage amperage. Also, will full disclosure reports be available at the open house?",
+    "propertyAddress": "123 Maple Street",
+    "recipientEmail": "sarah.j@zillowagent.com",
+    "status": "delivered",
+    "createdAt": "2026-11-05T08:06:40.606Z",
+    "source": "contact_form"
+  }
+]

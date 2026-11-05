@@ -1,0 +1,8 @@
+{
+  "name": "Zillow Real Estate | 123 Maple Street",
+  "description": "Find your dream home with confidence. Discover 123 Maple Street with Sarah Johnson, Licensed Real Estate Agent.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

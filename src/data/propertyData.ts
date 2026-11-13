@@ -1,4 +1,5 @@
 import { Property, AgentInfo } from '../types';
+import { IMAGES } from '../assets/images';
 
 export const FEATURED_PROPERTY: Property = {
   id: '123-maple-street',
@@ -16,25 +17,25 @@ export const FEATURED_PROPERTY: Property = {
   status: 'For Sale',
   description:
     'Beautiful modern home featuring an open-concept layout, natural light throughout, modern finishes, and a spacious backyard perfect for entertaining. Move-in ready with stylish updates and premium finishes in a quiet neighborhood.',
-  heroImage: '/src/assets/images/property_maple_exterior_1793879932362.jpg',
+  heroImage: IMAGES.propertyMapleExterior,
   images: [
     {
-      url: '/src/assets/images/property_maple_exterior_1793879932362.jpg',
+      url: IMAGES.propertyMapleExterior,
       caption: 'Front Exterior with Landscaped Yard & 2-Car Garage',
       tag: 'Exterior',
     },
     {
-      url: '/src/assets/images/property_kitchen_quartz_1793879933333.jpg',
+      url: IMAGES.propertyKitchenQuartz,
       caption: 'Gourmet Kitchen with Quartz Waterfall Countertops & Stainless Appliances',
       tag: 'Kitchen',
     },
     {
-      url: '/src/assets/images/property_living_fireplace_1793879934056.jpg',
+      url: IMAGES.propertyLivingFireplace,
       caption: 'Spacious Sunlit Living Room with Contemporary Fireplace',
       tag: 'Living Room',
     },
     {
-      url: '/src/assets/images/hero_luxury_home_1793879931818.jpg',
+      url: IMAGES.heroLuxuryHome,
       caption: 'Architectural Rear View with Outdoor Entertainment Grounds',
       tag: 'Grounds',
     },
@@ -89,7 +90,7 @@ export const SARAH_JOHNSON: AgentInfo = {
   phone: '(555) 123-4567',
   email: 'kaylinpeter88@gmail.com',
   licenseNumber: 'DRE #02194830',
-  image: '/src/assets/images/agent_sarah_johnson_1793879934014.jpg',
+  image: IMAGES.agentSarahJohnson,
   bio: 'With over a decade of dedicated real estate advisory experience, Sarah Johnson brings unmatched local market expertise, fierce client advocacy, and an unwavering commitment to finding families their forever homes. Ranked among the Top 1% of Zillow Premier Agents, Sarah combines data-driven valuation models with genuine white-glove personal service.',
   experienceYears: 12,
   salesVolume: '$48M+',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Sparkles, MapPin, Bed, Bath, Maximize2 } from 'lucide-react';
 import { Property } from '../types';
+import { IMAGES } from '../assets/images';
 
 interface HeroProps {
   property: Property;
@@ -20,7 +21,7 @@ export const Hero: React.FC<HeroProps> = ({
       {/* Background Image with Measured Scrim Overlay for WCAG AA contrast */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/src/assets/images/hero_luxury_home_1793879931818.jpg"
+          src={IMAGES.heroLuxuryHome}
           alt="Modern luxury architectural home"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center transform scale-100 transition-transform duration-1000 ease-out"
@@ -87,7 +88,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border border-white/40 text-slate-900 transition-all hover:shadow-blue-900/20">
               <div className="relative rounded-xl overflow-hidden aspect-4/3 mb-4 group cursor-pointer" onClick={onViewPropertyDetails}>
                 <img
-                  src="/src/assets/images/property_maple_exterior_1793879932362.jpg"
+                  src={IMAGES.propertyMapleExterior}
                   alt="Featured home at 123 Maple Street"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

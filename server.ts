@@ -52,7 +52,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   openHouseDate: 'Saturday, October 12',
   openHouseTime: '12:00 PM – 3:00 PM',
   openHouseStatus: 'Upcoming',
-  whatsappPhone: '+15551234567',
+  whatsappPhone: '07042086283',
   agentPhone: '(555) 123-4567',
   agentEmail: 'kaylinpeter88@gmail.com',
   featuredPrice: '$425,000',
@@ -350,7 +350,7 @@ app.post('/api/rsvp', (req: Request, res: Response) => {
     subject: `Open House RSVP (${guests} guest${Number(guests) > 1 ? 's' : ''})`,
     message: `Guest confirmed attendance for the Open House at ${propertyAddress}. Number of attendees: ${guests}.`,
     propertyAddress,
-    recipientEmail: 'sarah.j@zillowagent.com',
+    recipientEmail: 'kaylinpeter88@gmail.com',
     status: 'delivered',
     createdAt: new Date().toISOString(),
     source: 'open_house_rsvp',
@@ -360,7 +360,7 @@ app.post('/api/rsvp', (req: Request, res: Response) => {
   inquiries.unshift(newRsvp);
   saveInquiries(inquiries);
 
-  console.log(`[OPEN HOUSE RSVP DELIVERED TO: sarah.j@zillowagent.com] ${fullName} (${guests} attendees)`);
+  console.log(`[OPEN HOUSE RSVP DELIVERED TO: kaylinpeter88@gmail.com] ${fullName} (${guests} attendees)`);
 
   return res.json({
     success: true,

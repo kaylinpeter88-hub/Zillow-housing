@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { MessageCircle, Settings, Check, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Check, X } from 'lucide-react';
+import { buildWhatsAppUrl, DEFAULT_WHATSAPP_NUMBER } from '../utils/contactApi';
 
 interface WhatsAppButtonProps {
   initialPhone?: string;
@@ -8,7 +9,7 @@ interface WhatsAppButtonProps {
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
-  initialPhone = '+15551234567',
+  initialPhone = DEFAULT_WHATSAPP_NUMBER,
   propertyAddress = '123 Maple Street',
   onUpdatePhone,
 }) => {
@@ -16,23 +17,26 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [tempPhone, setTempPhone] = useState(initialPhone);
   const [customGreeting, setCustomGreeting] = useState(
-    `Hello Sarah, I saw your listing for ${propertyAddress} on Zillow Real Estate and would like to learn more.`
+    `Hello Sarah, I saw your listing for ${propertyAddress} on Zillow Real Estate and would like to make an enquiry.`
   );
 
-  const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+  useEffect(() => {
+    setPhoneNumber(initialPhone);
+    setTempPhone(initialPhone);
+  }, [initialPhone]);
 
   const handleOpenWhatsApp = () => {
-    const encoded = encodeURIComponent(customGreeting);
-    const url = `https://wa.me/${cleanPhone}?text=${encoded}`;
+    const url = buildWhatsAppUrl(phoneNumber, customGreeting);
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleSaveConfig = (e: React.FormEvent) => {
     e.preventDefault();
-    setPhoneNumber(tempPhone);
+    const cleaned = tempPhone.trim() || DEFAULT_WHATSAPP_NUMBER;
+    setPhoneNumber(cleaned);
     setIsConfigOpen(false);
     if (onUpdatePhone) {
-      onUpdatePhone(tempPhone);
+      onUpdatePhone(cleaned);
     }
   };
 
@@ -48,26 +52,27 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
             </div>
             <button
               onClick={() => setIsConfigOpen(false)}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+              className="text-slate-400 hover:text-slate-600 p-1 rounded-md cursor-pointer"
+              aria-label="Close WhatsApp configuration"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
           <p className="text-xs text-slate-500 mb-3">
-            Configure the direct mobile number used for incoming WhatsApp chats:
+            Configure the direct mobile number used for incoming WhatsApp enquiries:
           </p>
 
           <form onSubmit={handleSaveConfig} className="space-y-3">
             <div>
               <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
-                WhatsApp Phone (with Country Code)
+                WhatsApp Enquiry Number
               </label>
               <input
                 type="text"
                 value={tempPhone}
                 onChange={(e) => setTempPhone(e.target.value)}
-                placeholder="+15551234567"
+                placeholder="07042086283"
                 className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 focus-visible:outline-2 focus-visible:outline-emerald-500"
               />
             </div>
@@ -123,7 +128,8 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
         <button
           onClick={handleOpenWhatsApp}
           className="group relative flex items-center gap-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white px-4 py-3 rounded-full shadow-xl shadow-emerald-900/25 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-          aria-label="Chat with Sarah Johnson on WhatsApp"
+          aria-label={`Chat on WhatsApp (${phoneNumber})`}
+          title={`WhatsApp Enquiry: ${phoneNumber}`}
         >
           {/* Official WhatsApp SVG mark */}
           <svg
@@ -135,7 +141,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
           </svg>
 
           <span className="text-xs sm:text-sm font-bold tracking-tight whitespace-nowrap">
-            Chat on WhatsApp
+            WhatsApp Enquiry
           </span>
         </button>
       </div>

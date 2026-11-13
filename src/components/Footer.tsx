@@ -7,12 +7,15 @@ import {
   ExternalLink,
   Shield,
   Heart,
+  MessageSquare,
 } from 'lucide-react';
 import { AgentInfo } from '../types';
 import { BrandLogo } from './BrandLogo';
+import { buildWhatsAppUrl, DEFAULT_WHATSAPP_NUMBER } from '../utils/contactApi';
 
 interface FooterProps {
   agent: AgentInfo;
+  whatsappPhone?: string;
   onOpenInbox: () => void;
   onOpenDirections: () => void;
   onScheduleTour: () => void;
@@ -20,6 +23,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   agent,
+  whatsappPhone = DEFAULT_WHATSAPP_NUMBER,
   onOpenInbox,
   onOpenDirections,
   onScheduleTour,
@@ -196,6 +200,21 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-white transition-colors truncate max-w-[200px]"
                 >
                   {agent.email}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs">
+                <MessageSquare className="w-3.5 h-3.5 text-[#25D366] shrink-0" />
+                <a
+                  href={buildWhatsAppUrl(
+                    whatsappPhone,
+                    'Hello, I would like to make an enquiry about 123 Maple Street.'
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors tabular-nums"
+                >
+                  WhatsApp: {whatsappPhone}
                 </a>
               </div>
 

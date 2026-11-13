@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar, Clock, User, Mail, Phone, Users, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { submitContactInquiry } from '../utils/contactApi';
 
 interface ScheduleTourModalProps {
   isOpen: boolean;
@@ -48,37 +49,60 @@ export const ScheduleTourModal: React.FC<ScheduleTourModalProps> = ({
 
     try {
       if (mode === 'rsvp') {
-        const res = await fetch('/api/rsvp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+        let handled = false;
+        try {
+          const res = await fetch('/api/rsvp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fullName,
+              email,
+              phone,
+              guests: Number(guests) || 1,
+              propertyAddress,
+            }),
+          });
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to submit RSVP.');
+            setSuccessMessage(data.message);
+            handled = true;
+          }
+        } catch (err) {
+          if (err instanceof Error && err.message.includes('valid email')) {
+            throw err;
+          }
+        }
+
+        if (!handled) {
+          await submitContactInquiry({
             fullName,
             email,
             phone,
-            guests: Number(guests) || 1,
+            subject: `Open House RSVP (${guests} guest${Number(guests) > 1 ? 's' : ''})`,
+            message: `Guest confirmed attendance for the Open House at ${propertyAddress}. Number of attendees: ${guests}.`,
             propertyAddress,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to submit RSVP.');
-        setSuccessMessage(data.message);
+            source: 'open_house_rsvp',
+          });
+          setSuccessMessage(
+            `You're on the guest list! Confirmation details sent to ${email}. Sarah Johnson looks forward to greeting you.`
+          );
+        }
       } else {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fullName,
-            email,
-            phone,
-            subject: `Private Tour Request (${tourType === 'in_person' ? 'In-Person' : 'Live Video'})`,
-            message: `Requested Tour for ${propertyAddress} on ${tourDate} at ${tourTime}. Attendees: ${guests}. Notes: ${notes || 'None'}`,
-            propertyAddress,
-            formRenderedAt: Date.now() - 3000,
-          }),
+        await submitContactInquiry({
+          fullName,
+          email,
+          phone,
+          subject: `Private Tour Request (${tourType === 'in_person' ? 'In-Person' : 'Live Video'})`,
+          message: `Requested Tour for ${propertyAddress} on ${tourDate} at ${tourTime}. Attendees: ${guests}. Notes: ${notes || 'None'}`,
+          propertyAddress,
+          formRenderedAt: Date.now() - 3000,
+          source: 'tour_schedule',
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to request tour.');
-        setSuccessMessage(`Tour appointment requested! Confirmation delivered to sarah.j@zillowagent.com and ${email}.`);
+        setSuccessMessage(
+          `Tour appointment requested! Confirmation delivered to kaylinpeter88@gmail.com and ${email}.`
+        );
       }
 
       if (onSuccessSubmitted) {

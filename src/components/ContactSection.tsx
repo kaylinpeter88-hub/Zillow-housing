@@ -13,15 +13,18 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { AgentInfo } from '../types';
+import { buildWhatsAppUrl, DEFAULT_WHATSAPP_NUMBER, submitContactInquiry } from '../utils/contactApi';
 
 interface ContactSectionProps {
   agent: AgentInfo;
+  whatsappPhone?: string;
   onOpenInbox: () => void;
   defaultSubject?: string;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
   agent,
+  whatsappPhone = DEFAULT_WHATSAPP_NUMBER,
   onOpenInbox,
   defaultSubject = 'Inquiry regarding 123 Maple Street',
 }) => {
@@ -100,32 +103,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          formRenderedAt,
-          propertyAddress: '123 Maple Street',
-        }),
+      const data = await submitContactInquiry({
+        ...formData,
+        formRenderedAt,
+        propertyAddress: '123 Maple Street',
+        source: 'contact_form',
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (data.fieldErrors) {
-          setFieldErrors(data.fieldErrors);
-        }
-        throw new Error(data.error || 'Failed to submit inquiry. Please try again.');
-      }
 
       // Success
       setSubmitSuccess(data.message || 'Your inquiry has been successfully delivered!');
       setDeliveredDetails({
         inquiryId: data.inquiryId,
-        deliveredTo: data.deliveredTo || 'sarah.j@zillowagent.com',
+        deliveredTo: data.deliveredTo || 'kaylinpeter88@gmail.com',
         timestamp: new Date().toLocaleTimeString(),
       });
 
@@ -141,6 +130,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       setFieldErrors({});
     } catch (err: unknown) {
       console.error('Submission error:', err);
+      const errWithFields = err as Error & { fieldErrors?: Record<string, string> };
+      if (errWithFields?.fieldErrors) {
+        setFieldErrors(errWithFields.fieldErrors);
+      }
       const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
       setSubmitError(message);
     } finally {
@@ -207,6 +200,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     {agent.phone}
                   </a>
                   <p className="text-[11px] text-slate-500">Available Mon–Sun 8:00 AM – 8:00 PM</p>
+                </div>
+              </div>
+
+              {/* Clickable WhatsApp Enquiry link */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <MessageSquare className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-xs uppercase font-semibold text-slate-400">
+                    WhatsApp Enquiry
+                  </span>
+                  <a
+                    href={buildWhatsAppUrl(
+                      whatsappPhone,
+                      'Hello, I would like to make an enquiry about 123 Maple Street.'
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-base font-bold text-emerald-700 hover:text-emerald-800 hover:underline transition-colors tabular-nums"
+                  >
+                    {whatsappPhone}
+                  </a>
+                  <p className="text-[11px] text-slate-500">Instant chat on WhatsApp for property enquiries</p>
                 </div>
               </div>
 

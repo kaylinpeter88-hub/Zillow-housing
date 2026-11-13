@@ -14,6 +14,7 @@ import {
   Send,
 } from 'lucide-react';
 import { Inquiry } from '../types';
+import { loadInquiries, updateInquiryStatus } from '../utils/contactApi';
 
 interface AgentInboxModalProps {
   isOpen: boolean;
@@ -34,13 +35,10 @@ export const AgentInboxModal: React.FC<AgentInboxModalProps> = ({
   const fetchInquiries = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/inquiries');
-      if (res.ok) {
-        const data = await res.json();
-        setInquiries(data);
-        if (data.length > 0 && !selectedInquiry) {
-          setSelectedInquiry(data[0]);
-        }
+      const data = await loadInquiries();
+      setInquiries(data);
+      if (data.length > 0 && !selectedInquiry) {
+        setSelectedInquiry(data[0]);
       }
     } catch (err) {
       console.error('Failed to load inquiries:', err);
@@ -59,18 +57,12 @@ export const AgentInboxModal: React.FC<AgentInboxModalProps> = ({
 
   const markAsStatus = async (id: string, status: 'read' | 'replied') => {
     try {
-      const res = await fetch(`/api/inquiries/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      if (res.ok) {
-        setInquiries((prev) =>
-          prev.map((item) => (item.id === id ? { ...item, status } : item))
-        );
-        if (selectedInquiry?.id === id) {
-          setSelectedInquiry((prev) => (prev ? { ...prev, status } : null));
-        }
+      await updateInquiryStatus(id, status);
+      setInquiries((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status } : item))
+      );
+      if (selectedInquiry?.id === id) {
+        setSelectedInquiry((prev) => (prev ? { ...prev, status } : null));
       }
     } catch (err) {
       console.error(err);

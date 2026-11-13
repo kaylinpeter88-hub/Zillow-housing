@@ -19,18 +19,15 @@ import { ScheduleTourModal } from './components/ScheduleTourModal';
 import { AgentInboxModal } from './components/AgentInboxModal';
 import { FEATURED_PROPERTY, SARAH_JOHNSON } from './data/propertyData';
 import { SiteSettings } from './types';
+import {
+  DEFAULT_SETTINGS,
+  loadInquiries,
+  loadSettings,
+  persistSettings,
+} from './utils/contactApi';
 
 export default function App() {
-  const [settings, setSettings] = useState<SiteSettings>({
-    openHouseDate: 'Saturday, October 12',
-    openHouseTime: '12:00 PM – 3:00 PM',
-    openHouseStatus: 'Upcoming',
-    whatsappPhone: '+15551234567',
-    agentPhone: '(555) 123-4567',
-    agentEmail: 'kaylinpeter88@gmail.com',
-    featuredPrice: '$425,000',
-    propertyAddress: '123 Maple Street',
-  });
+  const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
 
   const [unreadInquiriesCount, setUnreadInquiriesCount] = useState<number>(0);
 
@@ -42,15 +39,12 @@ export default function App() {
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [contactSubject, setContactSubject] = useState<string>('Inquiry regarding 123 Maple Street');
 
-  // Load initial settings and inquiries from backend
+  // Load initial settings and inquiries from backend (with static fallback)
   const refreshInquiriesCount = async () => {
     try {
-      const res = await fetch('/api/inquiries');
-      if (res.ok) {
-        const data = await res.json();
-        const unread = data.filter((i: { status: string }) => i.status === 'delivered').length;
-        setUnreadInquiriesCount(unread);
-      }
+      const data = await loadInquiries();
+      const unread = data.filter((i) => i.status === 'delivered').length;
+      setUnreadInquiriesCount(unread);
     } catch (err) {
       console.warn('Could not fetch inquiries count:', err);
     }
@@ -58,15 +52,8 @@ export default function App() {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      try {
-        const res = await fetch('/api/settings');
-        if (res.ok) {
-          const data = await res.json();
-          setSettings(data);
-        }
-      } catch (err) {
-        console.warn('Could not fetch settings from server:', err);
-      }
+      const loaded = await loadSettings();
+      setSettings(loaded);
     };
 
     fetchSettings();
@@ -80,16 +67,7 @@ export default function App() {
       openHouseTime: newTime,
     };
     setSettings(updated);
-
-    try {
-      await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updated),
-      });
-    } catch (err) {
-      console.error('Failed to save settings:', err);
-    }
+    await persistSettings(updated);
   };
 
   const handleUpdateWhatsApp = async (newPhone: string) => {
@@ -98,16 +76,7 @@ export default function App() {
       whatsappPhone: newPhone,
     };
     setSettings(updated);
-
-    try {
-      await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updated),
-      });
-    } catch (err) {
-      console.error('Failed to save whatsapp setting:', err);
-    }
+    await persistSettings(updated);
   };
 
   const scrollTo = (elementId: string) => {
@@ -194,9 +163,10 @@ export default function App() {
           }}
         />
 
-        {/* 6. Contact Section (Direct validated form delivered to sarah.j@zillowagent.com) */}
+        {/* 6. Contact Section (Direct validated form delivered to kaylinpeter88@gmail.com) */}
         <ContactSection
           agent={SARAH_JOHNSON}
+          whatsappPhone={settings.whatsappPhone}
           onOpenInbox={() => setIsInboxOpen(true)}
           defaultSubject={contactSubject}
         />
@@ -205,6 +175,7 @@ export default function App() {
       {/* 7. Comprehensive Professional Footer */}
       <Footer
         agent={SARAH_JOHNSON}
+        whatsappPhone={settings.whatsappPhone}
         onOpenInbox={() => setIsInboxOpen(true)}
         onOpenDirections={() => setIsDirectionsOpen(true)}
         onScheduleTour={() => {

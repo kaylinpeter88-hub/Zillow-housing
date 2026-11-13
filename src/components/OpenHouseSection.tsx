@@ -10,6 +10,7 @@ import {
   Check,
   Sparkles,
 } from 'lucide-react';
+import { IMAGES } from '../assets/images';
 
 interface OpenHouseSectionProps {
   openHouseDate: string;
@@ -138,7 +139,7 @@ export const OpenHouseSection: React.FC<OpenHouseSectionProps> = ({
               <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-slate-200 space-y-4">
                 <div className="relative rounded-xl overflow-hidden aspect-16/10 mb-4 border border-white/20">
                   <img
-                    src="/src/assets/images/property_maple_exterior_1793879932362.jpg"
+                    src={IMAGES.propertyMapleExterior}
                     alt="123 Maple Street Exterior Entrance"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"

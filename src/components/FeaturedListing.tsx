@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bed, Bath, Maximize2, MapPin, Calendar, Heart, Share2, Check } from 'lucide-react';
 import { Property } from '../types';
+import { IMAGES } from '../assets/images';
 
 interface FeaturedListingProps {
   property: Property;
@@ -34,7 +35,7 @@ export const FeaturedListing: React.FC<FeaturedListingProps> = ({
       baths: 2.5,
       sqft: 2150,
       status: 'Pending',
-      image: '/src/assets/images/property_kitchen_quartz_1793879933333.jpg',
+      image: IMAGES.propertyKitchenQuartz,
       note: 'Higher price point, comparable finish quality',
     },
     {
@@ -45,7 +46,7 @@ export const FeaturedListing: React.FC<FeaturedListingProps> = ({
       baths: 2,
       sqft: 1720,
       status: 'Sold Recently',
-      image: '/src/assets/images/property_living_fireplace_1793879934056.jpg',
+      image: IMAGES.propertyLivingFireplace,
       note: 'Sold in 14 days over asking price',
     },
   ];
